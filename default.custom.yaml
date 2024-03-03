@@ -72,10 +72,10 @@ patch:
       - { when: composing, accept: Control+h, send: BackSpace }
       - { when: composing, accept: Control+g, send: Escape }
       - { when: composing, accept: Control+bracketleft, send: Escape }
-      - {accept: comma, send: Page_Up, when: paging}
-      - {accept: period, send: Page_Down, when: has_menu}
-      - {accept: "Control+Shift+2", set_option: ascii_mode, when: always}
-      - {accept: "Control+Shift+at", set_option: ascii_mode, when: always}
+      - { when: paging, accept: comma, send: Page_Up }
+      - { when: has_menu, accept: period, send: Page_Down }
+      - { when: always, accept: "Control+Shift+2", set_option: ascii_mode }
+      - { when: always, accept: "Control+Shift+at", set_option: ascii_mode }
 
   punctuator:
     full_shape: # 全角符号

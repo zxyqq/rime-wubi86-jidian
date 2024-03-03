@@ -20,6 +20,8 @@ switches:
 #    states: [ 中文, 英文 ]
   - name: ascii_punct
     states: [ 。，, ．， ]
+  - name: full_shape
+    states: [ 半角, 全角 ]
 
 engine:
   processors:

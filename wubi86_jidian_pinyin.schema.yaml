@@ -13,10 +13,6 @@ schema:
     - pinyin_simp
 
 switches:
-  - name: full_shape
-    states: [ 半角, 全角 ]
-  - name: extended_charset
-    states: [ 常用, 扩展 ]
   - name: ascii_punct
     states: [ 。，, ．， ]
 

@@ -18,16 +18,8 @@ switches:
 #  - name: ascii_mode
 #    reset: 0
 #    states: [ 中文, 英文 ]
-  - name: zh_trad
-    reset: 0    # 初始状态为 0: 简 -> 简 1: 简 -> 繁
-    states: [ 简体, 繁体 ]
-  - name: full_shape
-    states: [ 半角, 全角 ]
-  - name: extended_charset
-    states: [ 常用, 扩展 ]
   - name: ascii_punct
     states: [ 。，, ．， ]
-
 
 engine:
   processors:
@@ -49,14 +41,18 @@ engine:
     - punct_translator
     - reverse_lookup_translator
     - table_translator
-    - lua_translator@*wubi86_jidian_date_translator # 日期、时间、星期
-    - lua_translator@*wubi86_jidian_calculator # 计算器：二元运算，coco 开头，如 coco56*34 coco24/1024
+    - lua_translator@*date
+#    - lua_translator@*wubi86_jidian_date_translator # 日期、时间、星期
+#    - lua_translator@*wubi86_jidian_calculator # 计算器：二元运算，coco 开头，如 coco56*34 coco24/1024
 #    - lua_translator@*wubi86_jidian_single_char_first_filter # 单字优先
 #    - lua_translator@*wubi86_jidian_single_char_only # 单字过滤：只显示单字
 
     - history_translator@repeat_last_input # 重复上一次输入，对应下面的 repeat_last_input
   filters:
-    - simplifier@tradition
+    - simplifier
+    - uniquifier
+    - charset_filter@gbk                                # GBK过滤
+#    - simplifier@tradition
 #    - lua_filter@single_char_first_filter # 单字优先
 #    - lua_filter@single_char_only # 纯单字
 
@@ -92,15 +88,15 @@ translator:
 # 2. 如果配置了台湾繁体，就会将上一步生成的繁体进一步处理
 # 3. 根据这个文件：https://github.com/BYVoid/OpenCC/blob/master/data/dictionary/TWVariants.txt 把台湾与正常繁体不同的地方转成台湾版本的字，比如 “床”
 
-tradition:
-  #  opencc_config: s2t.json  # 简 -> 繁
-  opencc_config: s2hk.json  # 繁 -> 香港
-  #  opencc_config: t2s.json   # 繁 -> 简
-  #  opencc_config: t2tw.json  # 繁 -> 台湾
-  #  opencc_config: t2hk.json  # 繁 -> 香港
-  #  opencc_config: s2tw.json  # 簡 -> 臺灣標準
-  #  opencc_config: s2twp.json  # 簡 -> 臺灣片語
-  option_name: zh_trad
+#tradition:
+#  #  opencc_config: s2t.json  # 简 -> 繁
+#  opencc_config: s2hk.json  # 繁 -> 香港
+#  #  opencc_config: t2s.json   # 繁 -> 简
+#  #  opencc_config: t2tw.json  # 繁 -> 台湾
+#  #  opencc_config: t2hk.json  # 繁 -> 香港
+#  #  opencc_config: s2tw.json  # 簡 -> 臺灣標準
+#  #  opencc_config: s2twp.json  # 簡 -> 臺灣片語
+#  option_name: zh_trad
 
 reverse_lookup:
   dictionary: pinyin_simp  # 反查使用的拼音词库
@@ -126,7 +122,7 @@ recognizer:
   patterns:
 #    punct: "^/([0-9]+[a-z]*|[a-z]+)$" # 注意前方需要有4个空格，跟下面对齐
     reverse_lookup: "^z[a-z]*'?$" # 反查词条的正则
-    calculator: "^coco.*$" # 计算器
+#    calculator: "^coco.*$" # 计算器
 
 # 重复上一次输入
 repeat_last_input:

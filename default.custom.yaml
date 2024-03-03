@@ -10,23 +10,23 @@ patch:
   # 菜单中可选的方案列表，可根据喜好自行调整顺序，第一位为默认方案
   schema_list:
     - schema: wubi86_jidian             # 五笔
-    - schema: numbers                   # 大写数字
-    - schema: wubi86_jidian_pinyin      # 五笔拼音混输
-    - schema: wubi86_jidian_trad        # 五笔 - 简入繁出
-    - schema: wubi86_jidian_trad_pinyin # 五笔拼音混输 - 简入繁出
-    - schema: pinyin_simp               # 普通拼音
-
+#    - schema: wubi86_jidian_pinyin      # 五笔拼音混输
   # Menu
   menu:
     page_size: 5                    # 候选词数量，最多支持 10 个
   switcher:
     hotkeys:        # 弹出菜单的快捷键
-      - "Control+0"
-      - "Shift+Control+0"
+      - Control+grave
     abbreviate_options: true
     caption: "【 输入法设置 】"
     option_list_separator: "｜"
 
+  app_options:
+    "Code.exe:{ascii_mode": "true}"
+    "chrome.exe:{ascii_mode": "true}"
+    "cmd.exe:{ascii_mode": "true}"
+    "WindowsTerminal.exe:{ascii_mode": "true}"
+    "totalcmd64.exe:{ascii_mode": "true}"
   #-----------------------------------------------
   # 中英文切换自定义
   #-----------------------------------------------
@@ -37,15 +37,7 @@ patch:
   # 参考链接： https://gist.github.com/lotem/2981316
 
   ascii_composer:
-    good_old_caps_lock: true       # true: 在保持 cap 键原有的特征， false: 点击不会切换大小写
-    switch_key:
-      Caps_Lock: commit_code        # 如果想用 cap 键切换中英文输入，就修改为上面三种的任一一种，否则用 noop
-      Shift_L: commit_code          # macOs 上 shift 键不区别左右，设置参数同上
-      Shift_R: commit_code
-      Control_L: noop
-      Control_R: noop
-
-
+    switch_key: {Shift_L: clear, Shift_R: clear}
   key_binder:
     bindings:
 #      - { when: has_menu, accept: comma, send: 2 }  # 候选2 用逗号选择 （修改的时候不要多加或少加空格，跟前面的对齐就好了）
@@ -80,8 +72,10 @@ patch:
       - { when: composing, accept: Control+h, send: BackSpace }
       - { when: composing, accept: Control+g, send: Escape }
       - { when: composing, accept: Control+bracketleft, send: Escape }
-      - { when: composing, accept: Alt+v, send: Page_Up }
-      - { when: composing, accept: Control+v, send: Page_Down }
+      - {accept: comma, send: Page_Up, when: paging}
+      - {accept: period, send: Page_Down, when: has_menu}
+      - {accept: "Control+Shift+2", set_option: ascii_mode, when: always}
+      - {accept: "Control+Shift+at", set_option: ascii_mode, when: always}
 
   punctuator:
     full_shape: # 全角符号
